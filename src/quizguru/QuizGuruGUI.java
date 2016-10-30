@@ -393,7 +393,7 @@ public class QuizGuruGUI extends javax.swing.JFrame {
                 
                 questionRead = true;
                 fullQuestion = question[1] + " " + question[0] + " question #" + question[5] + ": \n" + question[3];
-                Speak(question[3].replaceAll("'",""));
+                Speak(question[3].replaceAll("'","").replaceAll("/", " "));
                 if(enableTextBox.isSelected()){
                     displayTextBox.setText(fullQuestion);
                 } else{
@@ -406,7 +406,7 @@ public class QuizGuruGUI extends javax.swing.JFrame {
                 
                 questionRead = false;
                 displayTextBox.setText(fullQuestion + "\nANSWER: " + question[4]);
-                Speak("ANSWER. " + question[4].replaceAll("'",""));
+                Speak("ANSWER. " + question[4].replaceAll("'","").replaceAll("/"," "));
                 generateButton.setText("Get Tossup");
                 answerTextBox.append(question[4] + " (from " + question[1] + " " + question[0] + " question #" + question[5] + ") \n");
 
