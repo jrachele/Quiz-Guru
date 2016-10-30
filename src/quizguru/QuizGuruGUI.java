@@ -30,8 +30,8 @@ public class QuizGuruGUI extends javax.swing.JFrame {
     boolean paused = false;
     QuizGuru guruMain = new QuizGuru();
     String fullQuestion = new String();
-    private ImageIcon playIcon = new ImageIcon("res/play.png");
-    private Icon pauseIcon = new ImageIcon("res/pause.png");
+    private ImageIcon playIcon = new ImageIcon(getClass().getResource("/play.png"));
+    private Icon pauseIcon = new ImageIcon(getClass().getResource("/pause.png"));
     public QuizGuruGUI() {
         initComponents();
         tts.setVoice("cmu-rms-hsmm");
