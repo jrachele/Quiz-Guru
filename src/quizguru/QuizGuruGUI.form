@@ -159,7 +159,7 @@
                           </Group>
                       </Group>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="jScrollPane1" pref="358" max="32767" attributes="0"/>
+                      <Component id="jScrollPane1" pref="395" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -313,7 +313,7 @@
             <Component class="javax.swing.JButton" name="pausePlayButton">
               <Properties>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="3" name="/pause.png"/>
+                  <Image iconType="3" name="/res/pause.png"/>
                 </Property>
                 <Property name="text" type="java.lang.String" value=" "/>
                 <Property name="alignmentX" type="float" value="0.5"/>
@@ -369,7 +369,7 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="answerPane" pref="456" max="32767" attributes="0"/>
+                      <Component id="answerPane" pref="493" max="32767" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
                   </Group>
               </Group>
@@ -545,7 +545,7 @@
                               <Component id="jLabel15" min="-2" max="-2" attributes="0"/>
                           </Group>
                       </Group>
-                      <EmptySpace pref="39" max="32767" attributes="0"/>
+                      <EmptySpace pref="76" max="32767" attributes="0"/>
                   </Group>
               </Group>
             </DimensionLayout>
@@ -635,21 +635,21 @@
             <Component class="javax.swing.JLabel" name="jLabel15">
               <Properties>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="2" name="/Users/julianrachele/GitHub/quizguru/QuizGuru/res/usc.png"/>
+                  <Image iconType="3" name="/res/usc.png"/>
                 </Property>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel16">
               <Properties>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="2" name="/Users/julianrachele/GitHub/quizguru/QuizGuru/res/academicteam.png"/>
+                  <Image iconType="3" name="/res/academicteam.png"/>
                 </Property>
               </Properties>
             </Component>
             <Component class="javax.swing.JLabel" name="jLabel17">
               <Properties>
                 <Property name="icon" type="javax.swing.Icon" editor="org.netbeans.modules.form.editors2.IconEditor">
-                  <Image iconType="2" name="/Users/julianrachele/GitHub/quizguru/QuizGuru/res/quinterest.png"/>
+                  <Image iconType="3" name="/res/quinterest.png"/>
                 </Property>
               </Properties>
             </Component>

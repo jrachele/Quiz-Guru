@@ -153,7 +153,7 @@ public class QuizGuruGUI extends javax.swing.JFrame {
             }
         });
 
-        pausePlayButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pause.png"))); // NOI18N
+        pausePlayButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/res/pause.png"))); // NOI18N
         pausePlayButton.setText(" ");
         pausePlayButton.setAlignmentX(0.5F);
         pausePlayButton.addActionListener(new java.awt.event.ActionListener() {
@@ -251,7 +251,7 @@ public class QuizGuruGUI extends javax.swing.JFrame {
                                 .addComponent(voiceLabel))
                             .addComponent(voiceDropDown, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 358, Short.MAX_VALUE)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 395, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -275,7 +275,7 @@ public class QuizGuruGUI extends javax.swing.JFrame {
             answerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(answerPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(answerPane, javax.swing.GroupLayout.DEFAULT_SIZE, 456, Short.MAX_VALUE)
+                .addComponent(answerPane, javax.swing.GroupLayout.DEFAULT_SIZE, 493, Short.MAX_VALUE)
                 .addContainerGap())
         );
 
@@ -311,11 +311,11 @@ public class QuizGuruGUI extends javax.swing.JFrame {
 
         jLabel14.setText("Julia Petersen");
 
-        jLabel15.setIcon(new javax.swing.ImageIcon("/Users/julianrachele/GitHub/quizguru/QuizGuru/res/usc.png")); // NOI18N
+        jLabel15.setIcon(new javax.swing.ImageIcon(getClass().getResource("/res/usc.png"))); // NOI18N
 
-        jLabel16.setIcon(new javax.swing.ImageIcon("/Users/julianrachele/GitHub/quizguru/QuizGuru/res/academicteam.png")); // NOI18N
+        jLabel16.setIcon(new javax.swing.ImageIcon(getClass().getResource("/res/academicteam.png"))); // NOI18N
 
-        jLabel17.setIcon(new javax.swing.ImageIcon("/Users/julianrachele/GitHub/quizguru/QuizGuru/res/quinterest.png")); // NOI18N
+        jLabel17.setIcon(new javax.swing.ImageIcon(getClass().getResource("/res/quinterest.png"))); // NOI18N
 
         jLabel18.setText("Special thanks to Quinterest for the");
 
@@ -427,7 +427,7 @@ public class QuizGuruGUI extends javax.swing.JFrame {
                     .addGroup(aboutPanelLayout.createSequentialGroup()
                         .addGap(18, 18, 18)
                         .addComponent(jLabel15)))
-                .addContainerGap(39, Short.MAX_VALUE))
+                .addContainerGap(76, Short.MAX_VALUE))
         );
 
         queryTab.addTab("About", aboutPanel);
