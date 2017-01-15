@@ -40,7 +40,7 @@ public class QuizGuru {
     int randNum = 0;
     boolean question = false;
     boolean resultsExist=true;
-    String[] results = new String[6];
+    String[] results = new String[11];
     float volumeFloat = 2.0f;
     
     public static void main(String[] args) {
@@ -75,11 +75,12 @@ public class QuizGuru {
     }
     
     
-    public String[] GenerateResults(String category, String tournament, boolean questionRead){
+    public String[] GenerateResults(String category, String tournament, boolean questionRead, String searchBoxValue){
         try {
             
             //Process information from GUI
             String categoryQuery = new String();
+            String searchQuery = new String();
             if (category == "All"){
                 categoryQuery = "";
             } else {
@@ -90,6 +91,11 @@ public class QuizGuru {
                 tournamentQuery="AND Difficulty = 'college' ";
             } else {
                 tournamentQuery="AND Tournament LIKE '%" + tournament + "%'";
+            }
+            if (searchBoxValue != null || searchBoxValue != ""){
+                searchQuery = "AND (Answer LIKE '%" + searchBoxValue + "%' OR Question LIKE '%" + searchBoxValue + "%')";
+            } else{
+                searchQuery = "";
             }
 
             if(questionRead == false){
@@ -103,7 +109,7 @@ public class QuizGuru {
                 
                 if (resultsExist==true){
                     // Execute SQL Query
-                    ResultSet myRs = myStmt.executeQuery("select * from tossupsdbnew WHERE ID LIKE '%%%%' " + categoryQuery + " " + tournamentQuery + " ORDER BY RAND() LIMIT 0,1");
+                    ResultSet myRs = myStmt.executeQuery("select * from tossupsdbnew WHERE ID LIKE '%%%%' " + categoryQuery + " " + tournamentQuery + " " + searchQuery + " ORDER BY RAND() LIMIT 0,1");
                     myRs.first();
 
                     results[0]=myRs.getString("tournament");
@@ -118,6 +124,70 @@ public class QuizGuru {
                 
                 
             } 
+
+            return results;  
+            
+        } catch (Exception exc) {
+            exc.printStackTrace();
+            return null;
+        }
+        
+    }
+    
+    public String[] GenerateBonusResults(String category, String tournament, String searchBoxValue){
+        try {
+            
+            //Process information from GUI
+            String categoryQuery = new String();
+            String searchQuery = new String();
+            if (category == "All"){
+                categoryQuery = "";
+            } else {
+                categoryQuery = "AND Category = '" + category + "'";
+            }
+            String tournamentQuery = new String();
+            if (tournament == "All"){
+                tournamentQuery="AND Difficulty = 'college' ";
+            } else {
+                tournamentQuery="AND Tournament LIKE '%" + tournament + "%'";
+            }
+            if (searchBoxValue != null || searchBoxValue != ""){
+                searchQuery = "AND (Intro LIKE '%" + searchBoxValue + "%' OR Question1 LIKE '%" + searchBoxValue + "%'  OR Question2 LIKE '%" + searchBoxValue + "%'  OR Question3 LIKE '%" + searchBoxValue + "%'  OR Answer1 LIKE '%" + searchBoxValue + "%'  OR Answer2 LIKE '%" + searchBoxValue + "%'  OR Answer3 LIKE '%" + searchBoxValue + "%')";
+            } else{
+                searchQuery = "";
+            }
+
+            
+                // Get connection to DB
+                Connection myConnection = DriverManager.getConnection("jdbc:mysql://quinterestdb.db.11269592.hostedresource.com/quinterestdb", "quinterestdb", "Quinterest!@#4");
+
+                // Create statement
+                Statement myStmt = myConnection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+                
+                // Get number of possible questions
+                
+                if (resultsExist==true){
+                    // Execute SQL Query
+                    ResultSet myRs = myStmt.executeQuery("select * from bonusesdb WHERE ID LIKE '%%%%' " + categoryQuery + " " + tournamentQuery + " " + searchQuery + " ORDER BY RAND() LIMIT 0,1");
+                    myRs.first();
+
+                    results[0]=myRs.getString("tournament");
+                    results[1]=myRs.getString("year");
+                    results[2]=myRs.getString("ID");
+                    results[3]=myRs.getString("intro");
+                    results[4]=myRs.getString("question1");
+                    results[5]=myRs.getString("answer1");
+                    results[6]=myRs.getString("question2");
+                    results[7]=myRs.getString("answer2");
+                    results[8]=myRs.getString("question3");
+                    results[9]=myRs.getString("answer3");
+                    results[10]=myRs.getString("question #");
+                } else if (resultsExist == false){
+                    return null;
+                }
+                
+                
+           
 
             return results;  
             

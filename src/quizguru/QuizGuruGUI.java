@@ -38,7 +38,7 @@ public class QuizGuruGUI extends javax.swing.JFrame {
         tts.setVoice("cmu-rms-hsmm");
         
     }
-    public static final String VERSION = "1.2.6";
+    public static final String VERSION = "1.2.7";
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -62,10 +62,10 @@ public class QuizGuruGUI extends javax.swing.JFrame {
         voiceLabel = new javax.swing.JLabel();
         voiceDropDown = new javax.swing.JComboBox<>();
         jSeparator1 = new javax.swing.JSeparator();
-        julianLabel = new javax.swing.JLabel();
         enableTextBox = new javax.swing.JCheckBox();
         pausePlayButton = new javax.swing.JButton();
         generateButtonBonus = new javax.swing.JButton();
+        customSearchTextBox = new javax.swing.JTextField();
         answerPanel = new javax.swing.JPanel();
         answerPane = new javax.swing.JScrollPane();
         answerTextBox = new javax.swing.JTextArea();
@@ -145,9 +145,6 @@ public class QuizGuruGUI extends javax.swing.JFrame {
 
         jSeparator1.setOrientation(javax.swing.SwingConstants.VERTICAL);
 
-        julianLabel.setFont(new java.awt.Font("Ubuntu", 2, 15)); // NOI18N
-        julianLabel.setText("by Julian Rachele");
-
         enableTextBox.setSelected(true);
         enableTextBox.setText("Enable Text During Question");
         enableTextBox.addActionListener(new java.awt.event.ActionListener() {
@@ -172,6 +169,8 @@ public class QuizGuruGUI extends javax.swing.JFrame {
             }
         });
 
+        customSearchTextBox.setToolTipText("");
+
         javax.swing.GroupLayout queryPanelLayout = new javax.swing.GroupLayout(queryPanel);
         queryPanel.setLayout(queryPanelLayout);
         queryPanelLayout.setHorizontalGroup(
@@ -183,7 +182,7 @@ public class QuizGuruGUI extends javax.swing.JFrame {
                         .addComponent(jScrollPane1)
                         .addContainerGap())
                     .addGroup(queryPanelLayout.createSequentialGroup()
-                        .addGroup(queryPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                        .addGroup(queryPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addGroup(queryPanelLayout.createSequentialGroup()
                                 .addComponent(generateButton)
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -195,8 +194,8 @@ public class QuizGuruGUI extends javax.swing.JFrame {
                                 .addGroup(queryPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                     .addGroup(queryPanelLayout.createSequentialGroup()
                                         .addComponent(mainLabel)
-                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
-                                        .addComponent(julianLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                        .addComponent(customSearchTextBox, javax.swing.GroupLayout.PREFERRED_SIZE, 146, javax.swing.GroupLayout.PREFERRED_SIZE))
                                     .addGroup(queryPanelLayout.createSequentialGroup()
                                         .addComponent(categoryLabel)
                                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
@@ -218,13 +217,13 @@ public class QuizGuruGUI extends javax.swing.JFrame {
         queryPanelLayout.setVerticalGroup(
             queryPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(queryPanelLayout.createSequentialGroup()
-                .addGap(6, 6, 6)
+                .addGap(4, 4, 4)
                 .addGroup(queryPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(queryPanelLayout.createSequentialGroup()
                         .addGroup(queryPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                            .addComponent(julianLabel)
-                            .addComponent(mainLabel))
-                        .addGap(6, 6, 6)
+                            .addComponent(mainLabel)
+                            .addComponent(customSearchTextBox, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(2, 2, 2)
                         .addGroup(queryPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(categoryDropDown, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(categoryLabel))
@@ -476,7 +475,7 @@ public class QuizGuruGUI extends javax.swing.JFrame {
     private void generateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_generateButtonActionPerformed
         // TODO add your handling code here:
         StopSpeaking();
-        String question[] = guruMain.GenerateResults(categoryDropDown.getSelectedItem().toString(), tournamentDropDown.getSelectedItem().toString(), questionRead);
+        String question[] = guruMain.GenerateResults(categoryDropDown.getSelectedItem().toString(), tournamentDropDown.getSelectedItem().toString(), questionRead, customSearchTextBox.getText());
         if (question == null){
             resultsExist = false;
         } else {
@@ -484,6 +483,12 @@ public class QuizGuruGUI extends javax.swing.JFrame {
         }
         paused = false;
         pausePlayButton.setIcon(pauseIcon);
+        generateButtonBonus.setText("Get Bonus");
+        coppedBonuses = false;
+        question1Read = false;
+        question2Read = false;
+        question3Read=false;
+        bonusCursor = 0;
         if (resultsExist == true){
             if (questionRead == false){
 
@@ -520,7 +525,7 @@ public class QuizGuruGUI extends javax.swing.JFrame {
         String speechString = null;
         
         if(coppedBonuses==false){
-            question = guruMain.GenerateBonusResults(categoryDropDown.getSelectedItem().toString(), tournamentDropDown.getSelectedItem().toString());
+            question = guruMain.GenerateBonusResults(categoryDropDown.getSelectedItem().toString(), tournamentDropDown.getSelectedItem().toString(), customSearchTextBox.getText());
             if (question == null){
             resultsExist = false;
             } else {
@@ -719,6 +724,7 @@ public class QuizGuruGUI extends javax.swing.JFrame {
     public static javax.swing.JTextArea answerTextBox;
     public static javax.swing.JComboBox<String> categoryDropDown;
     private javax.swing.JLabel categoryLabel;
+    public static javax.swing.JTextField customSearchTextBox;
     public static javax.swing.JTextArea displayTextBox;
     private javax.swing.JCheckBox enableTextBox;
     private static javax.swing.JButton generateButton;
@@ -744,7 +750,6 @@ public class QuizGuruGUI extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JSeparator jSeparator1;
     private javax.swing.JSeparator jSeparator2;
-    private javax.swing.JLabel julianLabel;
     private static javax.swing.JLabel mainLabel;
     private static javax.swing.JButton pausePlayButton;
     public javax.swing.JPanel queryPanel;
