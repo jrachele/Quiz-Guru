@@ -25,11 +25,12 @@ public class QuizGuruGUI extends javax.swing.JFrame {
      * Creates new form QuizGuruGUI
      */
     TextToSpeech tts = new TextToSpeech();
-    boolean questionRead = false;
-    boolean resultsExist; 
-    boolean paused = false;
+    boolean questionRead,question1Read,question2Read,question3Read,resultsExist,coppedBonuses,paused = false;
+
+    int bonusCursor = 0;
     QuizGuru guruMain = new QuizGuru();
     String fullQuestion = new String();
+    String question[] = null;
     private ImageIcon playIcon = new ImageIcon(getClass().getResource("/play.png"));
     private Icon pauseIcon = new ImageIcon(getClass().getResource("/pause.png"));
     public QuizGuruGUI() {
@@ -37,7 +38,7 @@ public class QuizGuruGUI extends javax.swing.JFrame {
         tts.setVoice("cmu-rms-hsmm");
         
     }
-    public static final String VERSION = "1.2.5";
+    public static final String VERSION = "1.2.6";
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -64,6 +65,7 @@ public class QuizGuruGUI extends javax.swing.JFrame {
         julianLabel = new javax.swing.JLabel();
         enableTextBox = new javax.swing.JCheckBox();
         pausePlayButton = new javax.swing.JButton();
+        generateButtonBonus = new javax.swing.JButton();
         answerPanel = new javax.swing.JPanel();
         answerPane = new javax.swing.JScrollPane();
         answerTextBox = new javax.swing.JTextArea();
@@ -95,21 +97,14 @@ public class QuizGuruGUI extends javax.swing.JFrame {
         setResizable(false);
 
         queryPanel.setPreferredSize(new java.awt.Dimension(510, 450));
-        queryPanel.setLayout(null);
 
         categoryLabel.setText("Category:");
-        queryPanel.add(categoryLabel);
-        categoryLabel.setBounds(6, 35, 60, 16);
 
         categoryDropDown.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "All", "Literature", "History", "Science", "Fine Arts", "Religion", "Mythology", "Philosophy", "Social Science", "Geography", "Current Events", "Trash" }));
-        queryPanel.add(categoryDropDown);
-        categoryDropDown.setBounds(84, 31, 198, 27);
 
-        mainLabel.setFont(new java.awt.Font("Ubuntu", 3, 15)); // NOI18N
+        mainLabel.setFont(new java.awt.Font("Ubuntu", 3, 16)); // NOI18N
         mainLabel.setHorizontalAlignment(javax.swing.SwingConstants.CENTER);
         mainLabel.setText("QuizGuru v1.2.4");
-        queryPanel.add(mainLabel);
-        mainLabel.setBounds(6, 6, 126, 19);
 
         generateButton.setText("Get Tossup");
         generateButton.addActionListener(new java.awt.event.ActionListener() {
@@ -117,12 +112,8 @@ public class QuizGuruGUI extends javax.swing.JFrame {
                 generateButtonActionPerformed(evt);
             }
         });
-        queryPanel.add(generateButton);
-        generateButton.setBounds(6, 68, 226, 29);
 
         tournamentLabel.setText("Tournament:");
-        queryPanel.add(tournamentLabel);
-        tournamentLabel.setBounds(306, 39, 80, 16);
 
         tournamentDropDown.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "All", "ACF Novice", "ACF Fall", "ACF Regionals", "ACF Nationals", "Penn Bowl", "NASAT", "MUT" }));
         tournamentDropDown.addActionListener(new java.awt.event.ActionListener() {
@@ -130,8 +121,6 @@ public class QuizGuruGUI extends javax.swing.JFrame {
                 tournamentDropDownActionPerformed(evt);
             }
         });
-        queryPanel.add(tournamentDropDown);
-        tournamentDropDown.setBounds(392, 35, 146, 27);
 
         displayTextBox.setEditable(false);
         displayTextBox.setColumns(20);
@@ -145,12 +134,7 @@ public class QuizGuruGUI extends javax.swing.JFrame {
         });
         jScrollPane1.setViewportView(displayTextBox);
 
-        queryPanel.add(jScrollPane1);
-        jScrollPane1.setBounds(6, 103, 532, 346);
-
         voiceLabel.setText("Voice:");
-        queryPanel.add(voiceLabel);
-        voiceLabel.setBounds(306, 73, 38, 16);
 
         voiceDropDown.setModel(new javax.swing.DefaultComboBoxModel<>(new String[] { "US Man 1", "US Woman 1", "UK Woman 1", "UK Woman 2" }));
         voiceDropDown.addActionListener(new java.awt.event.ActionListener() {
@@ -158,17 +142,11 @@ public class QuizGuruGUI extends javax.swing.JFrame {
                 voiceDropDownActionPerformed(evt);
             }
         });
-        queryPanel.add(voiceDropDown);
-        voiceDropDown.setBounds(356, 69, 182, 27);
 
         jSeparator1.setOrientation(javax.swing.SwingConstants.VERTICAL);
-        queryPanel.add(jSeparator1);
-        jSeparator1.setBounds(288, 6, 12, 91);
 
         julianLabel.setFont(new java.awt.Font("Ubuntu", 2, 15)); // NOI18N
         julianLabel.setText("by Julian Rachele");
-        queryPanel.add(julianLabel);
-        julianLabel.setBounds(138, 6, 126, 19);
 
         enableTextBox.setSelected(true);
         enableTextBox.setText("Enable Text During Question");
@@ -177,8 +155,6 @@ public class QuizGuruGUI extends javax.swing.JFrame {
                 enableTextBoxActionPerformed(evt);
             }
         });
-        queryPanel.add(enableTextBox);
-        enableTextBox.setBounds(306, 6, 297, 23);
 
         pausePlayButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/pause.png"))); // NOI18N
         pausePlayButton.setText(" ");
@@ -188,8 +164,97 @@ public class QuizGuruGUI extends javax.swing.JFrame {
                 pausePlayButtonActionPerformed(evt);
             }
         });
-        queryPanel.add(pausePlayButton);
-        pausePlayButton.setBounds(230, 60, 50, 37);
+
+        generateButtonBonus.setText("Get Bonuses");
+        generateButtonBonus.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                generateButtonBonusActionPerformed(evt);
+            }
+        });
+
+        javax.swing.GroupLayout queryPanelLayout = new javax.swing.GroupLayout(queryPanel);
+        queryPanel.setLayout(queryPanelLayout);
+        queryPanelLayout.setHorizontalGroup(
+            queryPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(queryPanelLayout.createSequentialGroup()
+                .addGap(6, 6, 6)
+                .addGroup(queryPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                    .addGroup(queryPanelLayout.createSequentialGroup()
+                        .addComponent(jScrollPane1)
+                        .addContainerGap())
+                    .addGroup(queryPanelLayout.createSequentialGroup()
+                        .addGroup(queryPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING, false)
+                            .addGroup(queryPanelLayout.createSequentialGroup()
+                                .addComponent(generateButton)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(generateButtonBonus)
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                                .addComponent(pausePlayButton, javax.swing.GroupLayout.PREFERRED_SIZE, 50, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(queryPanelLayout.createSequentialGroup()
+                                .addGap(6, 6, 6)
+                                .addGroup(queryPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(queryPanelLayout.createSequentialGroup()
+                                        .addComponent(mainLabel)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                                        .addComponent(julianLabel, javax.swing.GroupLayout.PREFERRED_SIZE, 126, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addGroup(queryPanelLayout.createSequentialGroup()
+                                        .addComponent(categoryLabel)
+                                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                        .addComponent(categoryDropDown, javax.swing.GroupLayout.PREFERRED_SIZE, 214, javax.swing.GroupLayout.PREFERRED_SIZE)))))
+                        .addGap(6, 6, 6)
+                        .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(6, 6, 6)
+                        .addGroup(queryPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(enableTextBox, javax.swing.GroupLayout.PREFERRED_SIZE, 220, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addGroup(queryPanelLayout.createSequentialGroup()
+                                .addComponent(tournamentLabel)
+                                .addGap(6, 6, 6)
+                                .addComponent(tournamentDropDown, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(queryPanelLayout.createSequentialGroup()
+                                .addComponent(voiceLabel)
+                                .addGap(12, 12, 12)
+                                .addComponent(voiceDropDown, javax.swing.GroupLayout.PREFERRED_SIZE, 182, javax.swing.GroupLayout.PREFERRED_SIZE))))))
+        );
+        queryPanelLayout.setVerticalGroup(
+            queryPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+            .addGroup(queryPanelLayout.createSequentialGroup()
+                .addGap(6, 6, 6)
+                .addGroup(queryPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(queryPanelLayout.createSequentialGroup()
+                        .addGroup(queryPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(julianLabel)
+                            .addComponent(mainLabel))
+                        .addGap(6, 6, 6)
+                        .addGroup(queryPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(categoryDropDown, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(categoryLabel))
+                        .addGap(2, 2, 2)
+                        .addGroup(queryPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(queryPanelLayout.createSequentialGroup()
+                                .addGap(8, 8, 8)
+                                .addGroup(queryPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                                    .addComponent(generateButton)
+                                    .addComponent(generateButtonBonus)))
+                            .addComponent(pausePlayButton)))
+                    .addComponent(jSeparator1, javax.swing.GroupLayout.PREFERRED_SIZE, 91, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(queryPanelLayout.createSequentialGroup()
+                        .addComponent(enableTextBox)
+                        .addGap(6, 6, 6)
+                        .addGroup(queryPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(queryPanelLayout.createSequentialGroup()
+                                .addGap(4, 4, 4)
+                                .addComponent(tournamentLabel))
+                            .addComponent(tournamentDropDown, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(7, 7, 7)
+                        .addGroup(queryPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addGroup(queryPanelLayout.createSequentialGroup()
+                                .addGap(4, 4, 4)
+                                .addComponent(voiceLabel))
+                            .addComponent(voiceDropDown, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(jScrollPane1, javax.swing.GroupLayout.DEFAULT_SIZE, 358, Short.MAX_VALUE)
+                .addContainerGap())
+        );
 
         queryTab.addTab("Query", queryPanel);
 
@@ -204,14 +269,15 @@ public class QuizGuruGUI extends javax.swing.JFrame {
             answerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(answerPanelLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(answerPane, javax.swing.GroupLayout.DEFAULT_SIZE, 531, Short.MAX_VALUE)
+                .addComponent(answerPane, javax.swing.GroupLayout.DEFAULT_SIZE, 548, Short.MAX_VALUE)
                 .addContainerGap())
         );
         answerPanelLayout.setVerticalGroup(
             answerPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(answerPanelLayout.createSequentialGroup()
-                .addGap(6, 6, 6)
-                .addComponent(answerPane, javax.swing.GroupLayout.PREFERRED_SIZE, 441, javax.swing.GroupLayout.PREFERRED_SIZE))
+                .addContainerGap()
+                .addComponent(answerPane, javax.swing.GroupLayout.DEFAULT_SIZE, 456, Short.MAX_VALUE)
+                .addContainerGap())
         );
 
         queryTab.addTab("Question History", answerPanel);
@@ -260,10 +326,10 @@ public class QuizGuruGUI extends javax.swing.JFrame {
         aboutPanel.setLayout(aboutPanelLayout);
         aboutPanelLayout.setHorizontalGroup(
             aboutPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(aboutPanelLayout.createSequentialGroup()
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, aboutPanelLayout.createSequentialGroup()
+                .addContainerGap(50, Short.MAX_VALUE)
                 .addGroup(aboutPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(aboutPanelLayout.createSequentialGroup()
-                        .addGap(18, 18, 18)
                         .addComponent(jLabel15)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(aboutPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -277,7 +343,7 @@ public class QuizGuruGUI extends javax.swing.JFrame {
                                         .addGap(15, 15, 15)
                                         .addComponent(jLabel19))))))
                     .addGroup(aboutPanelLayout.createSequentialGroup()
-                        .addGap(86, 86, 86)
+                        .addGap(68, 68, 68)
                         .addGroup(aboutPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jSeparator2, javax.swing.GroupLayout.PREFERRED_SIZE, 337, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addGroup(aboutPanelLayout.createSequentialGroup()
@@ -288,7 +354,7 @@ public class QuizGuruGUI extends javax.swing.JFrame {
                                     .addComponent(versionLabel)
                                     .addComponent(jLabel4)))))
                     .addGroup(aboutPanelLayout.createSequentialGroup()
-                        .addGap(61, 61, 61)
+                        .addGap(43, 43, 43)
                         .addGroup(aboutPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                             .addComponent(jLabel8)
                             .addGroup(aboutPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING, false)
@@ -315,14 +381,14 @@ public class QuizGuruGUI extends javax.swing.JFrame {
                                                 .addComponent(jLabel14, javax.swing.GroupLayout.Alignment.TRAILING)))))
                                 .addComponent(jLabel5))))
                     .addGroup(aboutPanelLayout.createSequentialGroup()
-                        .addGap(70, 70, 70)
+                        .addGap(52, 52, 52)
                         .addComponent(jLabel2)))
-                .addContainerGap(51, Short.MAX_VALUE))
+                .addGap(36, 36, 36))
         );
         aboutPanelLayout.setVerticalGroup(
             aboutPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(aboutPanelLayout.createSequentialGroup()
-                .addGap(12, 12, 12)
+                .addContainerGap()
                 .addGroup(aboutPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(aboutPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                         .addComponent(jLabel1)
@@ -362,7 +428,7 @@ public class QuizGuruGUI extends javax.swing.JFrame {
                     .addGroup(aboutPanelLayout.createSequentialGroup()
                         .addGap(18, 18, 18)
                         .addComponent(jLabel15)))
-                .addContainerGap(17, Short.MAX_VALUE))
+                .addContainerGap(39, Short.MAX_VALUE))
         );
 
         queryTab.addTab("About", aboutPanel);
@@ -372,10 +438,40 @@ public class QuizGuruGUI extends javax.swing.JFrame {
         pack();
     }// </editor-fold>//GEN-END:initComponents
 
+    private void pausePlayButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pausePlayButtonActionPerformed
+        try {
+            // TODO add your handling code here:
+            pausePlay();
+        } catch (InterruptedException ex) {
+            Logger.getLogger(QuizGuruGUI.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }//GEN-LAST:event_pausePlayButtonActionPerformed
+
+    private void enableTextBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_enableTextBoxActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_enableTextBoxActionPerformed
+
+    private void voiceDropDownActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_voiceDropDownActionPerformed
+        // TODO add your handling code here:
+        if (voiceDropDown.getSelectedItem().toString() == "US Woman 1"){
+            tts.setVoice("cmu-slt-hsmm");
+
+        } else if (voiceDropDown.getSelectedItem().toString() == "US Man 1"){
+            tts.setVoice("cmu-rms-hsmm");
+        } else if (voiceDropDown.getSelectedItem().toString() == "UK Woman 1"){
+            tts.setVoice("dfki-poppy-hsmm");
+        } else {
+            tts.setVoice("dfki-prudence-hsmm");
+        }
+    }//GEN-LAST:event_voiceDropDownActionPerformed
+
     private void displayTextBoxPropertyChange(java.beans.PropertyChangeEvent evt) {//GEN-FIRST:event_displayTextBoxPropertyChange
         // TODO add your handling code here:
-
     }//GEN-LAST:event_displayTextBoxPropertyChange
+
+    private void tournamentDropDownActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tournamentDropDownActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_tournamentDropDownActionPerformed
 
     private void generateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_generateButtonActionPerformed
         // TODO add your handling code here:
@@ -390,70 +486,155 @@ public class QuizGuruGUI extends javax.swing.JFrame {
         pausePlayButton.setIcon(pauseIcon);
         if (resultsExist == true){
             if (questionRead == false){
-                
+
                 questionRead = true;
                 fullQuestion = question[1] + " " + question[0] + " question #" + question[5] + ": \n" + question[3];
-                Speak(question[3].replaceAll("'","").replaceAll("/", " "));
+                Speak(question[3]);
                 if(enableTextBox.isSelected()){
                     displayTextBox.setText(fullQuestion);
                 } else{
                     displayTextBox.setText("Press Get Answer to view Question and Answer.");
                 }
-                
+
                 generateButton.setText("Get Answer");
 
             } else {
-                
+
                 questionRead = false;
                 displayTextBox.setText(fullQuestion + "\nANSWER: " + question[4]);
-                Speak("ANSWER. " + question[4].replaceAll("'","").replaceAll("/"," "));
+                Speak("ANSWER. " + question[4]);
                 generateButton.setText("Get Tossup");
                 answerTextBox.append(question[4] + " (from " + question[1] + " " + question[0] + " question #" + question[5] + ") \n");
 
             }
         } else{
             JOptionPane.showMessageDialog(new JFrame(), "Unable to produce questions under the criteria selected.", "Dialog",
-            JOptionPane.ERROR_MESSAGE);
+                JOptionPane.ERROR_MESSAGE);
         }
-        
     }//GEN-LAST:event_generateButtonActionPerformed
 
-    private void voiceDropDownActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_voiceDropDownActionPerformed
+    private void generateButtonBonusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_generateButtonBonusActionPerformed
         // TODO add your handling code here:
-        if (voiceDropDown.getSelectedItem().toString() == "US Woman 1"){
-            tts.setVoice("cmu-slt-hsmm");
+        StopSpeaking();
+        
+        String speechString = null;
+        
+        if(coppedBonuses==false){
+            question = guruMain.GenerateBonusResults(categoryDropDown.getSelectedItem().toString(), tournamentDropDown.getSelectedItem().toString());
+            if (question == null){
+            resultsExist = false;
+            } else {
+                resultsExist = true;
+                coppedBonuses = true;
+                if(question[3] == null || question[3].isEmpty()){
+                    question[3] = "The Quinterest database neglected to put in an intro for this bonus, for 10 points each:";
+                }
+            }
+        }
+        if(bonusCursor == 0){
+            paused = false;
+            pausePlayButton.setIcon(pauseIcon);
+        if (resultsExist == true){
+            if (question1Read == false){
+                question1Read = true;
+                fullQuestion = question[1] + " " + question[0] + " question #" + question[10] + ": \n" + question[3] + "\n[10] " + question[4];
+                speechString = question[3] + " " + question[4];
+                Speak(speechString);
+                if(enableTextBox.isSelected()){
+                    displayTextBox.setText(fullQuestion);
+                } else{
+                    displayTextBox.setText("Press Get Answer to view Question and Answer.");
+                }
+
+                generateButtonBonus.setText("Get Answer");
+
+            } else {
+                
+                question1Read = false;
+                displayTextBox.setText(fullQuestion + "\nANSWER: " + question[5]);
+                Speak("ANSWER. " + question[5]);
+                generateButtonBonus.setText("Next Bonus");
+                bonusCursor = 1;
+
+            }
+        } else{
+            JOptionPane.showMessageDialog(new JFrame(), "Unable to produce questions under the criteria selected.", "Dialog",
+                JOptionPane.ERROR_MESSAGE);
+        }
+        }
+        else if (bonusCursor == 1){
+            paused = false;
+            pausePlayButton.setIcon(pauseIcon);
+            if (question2Read == false){
+                question2Read = true;
+                fullQuestion = question[1] + " " + question[0] + " question #" + question[10] + ": \n" + question[3] + "\n[10] " + question[4] + "\nANSWER: " + question[5] + "\n[10] " + question[6];
+                speechString = question[6];
+                Speak(speechString.replaceAll("'","").replaceAll("/", " "));
+                if(enableTextBox.isSelected()){
+                    displayTextBox.setText(fullQuestion);
+                } else{
+                    displayTextBox.setText("Press Get Answer to view Question and Answer.");
+                }
+
+                generateButtonBonus.setText("Get Answer");
+
+            } else {
+                
+                question2Read = false;
+                displayTextBox.setText(fullQuestion + "\nANSWER: " + question[7]);
+                Speak("ANSWER. " + question[7]);
+                generateButtonBonus.setText("Next Bonus");
+                bonusCursor = 2;
+
+            }
+        
+        }
+        else if (bonusCursor == 2){
+            paused = false;
+            pausePlayButton.setIcon(pauseIcon);
+            if (question3Read == false){
+                question3Read = true;
+                fullQuestion = question[1] + " " + question[0] + " question #" + question[10] + ": \n" + question[3] + "\n[10] " + question[4] + "\nANSWER: " + question[5] + "\n[10] " + question[6] + "\nANSWER: " + question[7] + "\n[10] " + question[8];
+                speechString = question[8];
+                Speak(speechString);
+                if(enableTextBox.isSelected()){
+                    displayTextBox.setText(fullQuestion);
+                } else{
+                    displayTextBox.setText("Press Get Answer to view Question and Answer.");
+                }
+
+                generateButtonBonus.setText("Get Answer");
+
+            } else {
+                
+                question3Read = false;
+                displayTextBox.setText(fullQuestion + "\nANSWER: " + question[9]);
+                Speak("ANSWER. " + question[9]);
+                generateButtonBonus.setText("Get Bonuses");
+                answerTextBox.append(question[1] + " " + question[0] + " question #" + question[10] + " \n");
+                coppedBonuses = false;
+                question1Read = false;
+                question2Read = false;
+                question3Read=false;
+                bonusCursor = 0;
+
+            }
             
-        } else if (voiceDropDown.getSelectedItem().toString() == "US Man 1"){
-            tts.setVoice("cmu-rms-hsmm");
-        } else if (voiceDropDown.getSelectedItem().toString() == "UK Woman 1"){
-            tts.setVoice("dfki-poppy-hsmm");
-        } else {
-            tts.setVoice("dfki-prudence-hsmm");
+        
         }
-    }//GEN-LAST:event_voiceDropDownActionPerformed
-
-    private void enableTextBoxActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_enableTextBoxActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_enableTextBoxActionPerformed
-
-    private void tournamentDropDownActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_tournamentDropDownActionPerformed
-        // TODO add your handling code here:
-    }//GEN-LAST:event_tournamentDropDownActionPerformed
-
-    private void pausePlayButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_pausePlayButtonActionPerformed
-        try {
-            // TODO add your handling code here:
-            pausePlay();
-        } catch (InterruptedException ex) {
-            Logger.getLogger(QuizGuruGUI.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }//GEN-LAST:event_pausePlayButtonActionPerformed
+        
+           
+        
+        
+        
+    }//GEN-LAST:event_generateButtonBonusActionPerformed
 
     
     
     
         
     public void Speak(String speech) {
+        speech = speech.toLowerCase().replaceAll("'","").replaceAll("/", " ").replaceAll(" ii ", " 2 ").replaceAll("ftpe", "For ten points each:");
         tts.speak(speech, 2.0f, true, false);
         
         
@@ -522,6 +703,7 @@ public class QuizGuruGUI extends javax.swing.JFrame {
                 new QuizGuruGUI().setVisible(true);
                 mainLabel.setText("QuizGuru v" + VERSION);
                 versionLabel.setText("Version " + VERSION);
+                
             }
         });
         
@@ -540,6 +722,7 @@ public class QuizGuruGUI extends javax.swing.JFrame {
     public static javax.swing.JTextArea displayTextBox;
     private javax.swing.JCheckBox enableTextBox;
     private static javax.swing.JButton generateButton;
+    private static javax.swing.JButton generateButtonBonus;
     private javax.swing.JLabel jLabel1;
     private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel11;
