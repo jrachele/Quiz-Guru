@@ -75,12 +75,13 @@ public class QuizGuru {
     }
     
     
-    public String[] GenerateResults(String category, String tournament, boolean questionRead, String searchBoxValue){
+    public String[] GenerateResults(String category, String tournament, boolean questionRead, String searchBoxValue, String difficulty){
         try {
             
             //Process information from GUI
             String categoryQuery = new String();
             String searchQuery = new String();
+            String difficultyQuery = new String();
             if (category == "All"){
                 categoryQuery = "";
             } else {
@@ -88,9 +89,14 @@ public class QuizGuru {
             }
             String tournamentQuery = new String();
             if (tournament == "All"){
-                tournamentQuery="AND Difficulty = 'college' ";
+                tournamentQuery="";
             } else {
                 tournamentQuery="AND Tournament LIKE '%" + tournament + "%'";
+            }
+            if (difficulty == "All"){
+                difficultyQuery = "AND (Difficulty = 'college' OR Difficulty = 'ms' OR Difficulty = 'hs' OR Difficulty = 'high school' OR Difficulty = 'open' OR Difficulty = 'college') ";
+            } else {
+                difficultyQuery = "AND Difficulty = '" + difficulty + "'";
             }
             if (searchBoxValue != null || searchBoxValue != ""){
                 searchQuery = "AND (Answer LIKE '%" + searchBoxValue + "%' OR Question LIKE '%" + searchBoxValue + "%')";
@@ -109,7 +115,7 @@ public class QuizGuru {
                 
                 if (resultsExist==true){
                     // Execute SQL Query
-                    ResultSet myRs = myStmt.executeQuery("select * from tossupsdbnew WHERE ID LIKE '%%%%' " + categoryQuery + " " + tournamentQuery + " " + searchQuery + " ORDER BY RAND() LIMIT 0,1");
+                    ResultSet myRs = myStmt.executeQuery("select * from tossupsdbnew WHERE ID LIKE '%%%%' " + categoryQuery + " " + tournamentQuery + " " + searchQuery + " " + difficultyQuery + " ORDER BY RAND() LIMIT 0,1");
                     myRs.first();
 
                     results[0]=myRs.getString("tournament");
@@ -134,12 +140,13 @@ public class QuizGuru {
         
     }
     
-    public String[] GenerateBonusResults(String category, String tournament, String searchBoxValue){
+    public String[] GenerateBonusResults(String category, String tournament, String searchBoxValue, String difficulty){
         try {
             
             //Process information from GUI
             String categoryQuery = new String();
             String searchQuery = new String();
+            String difficultyQuery = new String();
             if (category == "All"){
                 categoryQuery = "";
             } else {
@@ -147,9 +154,14 @@ public class QuizGuru {
             }
             String tournamentQuery = new String();
             if (tournament == "All"){
-                tournamentQuery="AND Difficulty = 'college' ";
+                tournamentQuery="";
             } else {
                 tournamentQuery="AND Tournament LIKE '%" + tournament + "%'";
+            }
+            if (difficulty == "All"){
+                difficultyQuery = "AND (Difficulty = 'college' OR Difficulty = 'ms' OR Difficulty = 'hs' OR Difficulty = 'high school' OR Difficulty = 'open' OR Difficulty = 'college') ";
+            } else {
+                difficultyQuery = "AND Difficulty = '" + difficulty + "'";
             }
             if (searchBoxValue != null || searchBoxValue != ""){
                 searchQuery = "AND (Intro LIKE '%" + searchBoxValue + "%' OR Question1 LIKE '%" + searchBoxValue + "%'  OR Question2 LIKE '%" + searchBoxValue + "%'  OR Question3 LIKE '%" + searchBoxValue + "%'  OR Answer1 LIKE '%" + searchBoxValue + "%'  OR Answer2 LIKE '%" + searchBoxValue + "%'  OR Answer3 LIKE '%" + searchBoxValue + "%')";
@@ -168,7 +180,7 @@ public class QuizGuru {
                 
                 if (resultsExist==true){
                     // Execute SQL Query
-                    ResultSet myRs = myStmt.executeQuery("select * from bonusesdb WHERE ID LIKE '%%%%' " + categoryQuery + " " + tournamentQuery + " " + searchQuery + " ORDER BY RAND() LIMIT 0,1");
+                    ResultSet myRs = myStmt.executeQuery("select * from bonusesdb WHERE ID LIKE '%%%%' " + categoryQuery + " " + tournamentQuery + " " + searchQuery + " " + difficultyQuery + " ORDER BY RAND() LIMIT 0,1");
                     myRs.first();
 
                     results[0]=myRs.getString("tournament");
