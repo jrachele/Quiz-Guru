@@ -31,8 +31,8 @@ public class QuizGuruGUI extends javax.swing.JFrame {
     QuizGuru guruMain = new QuizGuru();
     String fullQuestion = new String();
     String question[] = null;
-    private ImageIcon playIcon = new ImageIcon(getClass().getResource("/play.png"));
-    private Icon pauseIcon = new ImageIcon(getClass().getResource("/pause.png"));
+    private ImageIcon playIcon = new ImageIcon(getClass().getResource("/res/play.png"));
+    private Icon pauseIcon = new ImageIcon(getClass().getResource("/res/pause.png"));
     public QuizGuruGUI() {
         initComponents();
         tts.setVoice("cmu-rms-hsmm");
