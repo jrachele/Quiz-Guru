@@ -106,7 +106,7 @@ public class QuizGuru {
 
             if(questionRead == false){
                 // Get connection to DB
-                Connection myConnection = DriverManager.getConnection("jdbc:sqlite:src/db/db.sqlite");
+                Connection myConnection = DriverManager.getConnection("jdbc:sqlite::resource:db/db.sqlite");
 
                 
                 
@@ -171,7 +171,7 @@ public class QuizGuru {
 
             
                 // Get connection to DB
-                Connection myConnection = DriverManager.getConnection("jdbc:sqlite:src/db/db.sqlite");
+                Connection myConnection = DriverManager.getConnection("jdbc:sqlite::resource:db/db.sqlite");
 
                 // Create statement
                 
