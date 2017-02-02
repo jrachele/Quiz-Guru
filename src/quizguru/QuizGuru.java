@@ -94,29 +94,29 @@ public class QuizGuru {
                 tournamentQuery="AND Tournament LIKE '%" + tournament + "%'";
             }
             if (difficulty == "All"){
-                difficultyQuery = "AND (Difficulty = 'college' OR Difficulty = 'ms' OR Difficulty = 'hs' OR Difficulty = 'high school' OR Difficulty = 'open' OR Difficulty = 'college') ";
+                difficultyQuery = "AND Difficulty = 'college' OR Difficulty = 'ms' OR Difficulty = 'hs' OR Difficulty = 'high school' OR Difficulty = 'open' OR Difficulty = 'college' ";
             } else {
                 difficultyQuery = "AND Difficulty = '" + difficulty + "'";
             }
             if (searchBoxValue != null || searchBoxValue != ""){
-                searchQuery = "AND (Answer LIKE '%" + searchBoxValue + "%' OR Question LIKE '%" + searchBoxValue + "%')";
+                searchQuery = "AND Answer LIKE '%" + searchBoxValue + "%' OR Question LIKE '%" + searchBoxValue + "%'";
             } else{
                 searchQuery = "";
             }
 
             if(questionRead == false){
                 // Get connection to DB
-                Connection myConnection = DriverManager.getConnection("jdbc:mysql://quinterestdb.db.11269592.hostedresource.com/quinterestdb", "quinterestdb", "Quinterest!@#4");
+                Connection myConnection = DriverManager.getConnection("jdbc:sqlite:src/db/db.sqlite");
 
-                // Create statement
-                Statement myStmt = myConnection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+                
                 
                 // Get number of possible questions
                 
                 if (resultsExist==true){
                     // Execute SQL Query
-                    ResultSet myRs = myStmt.executeQuery("select * from tossupsdbnew WHERE ID LIKE '%%%%' " + categoryQuery + " " + tournamentQuery + " " + searchQuery + " " + difficultyQuery + " ORDER BY RAND() LIMIT 0,1");
-                    myRs.first();
+                    //ResultSet myRs = myConnection.createStatement().executeQuery("select * from tossupsdbnew");
+                    ResultSet myRs = myConnection.createStatement().executeQuery("select * from tossupsdbnew WHERE ID LIKE '%%%%' " + categoryQuery + " " + tournamentQuery + " " + searchQuery + " " + difficultyQuery + " ORDER BY RANDOM() LIMIT 1");
+                    
 
                     results[0]=myRs.getString("tournament");
                     results[1]=myRs.getString("year");
@@ -159,29 +159,29 @@ public class QuizGuru {
                 tournamentQuery="AND Tournament LIKE '%" + tournament + "%'";
             }
             if (difficulty == "All"){
-                difficultyQuery = "AND (Difficulty = 'college' OR Difficulty = 'ms' OR Difficulty = 'hs' OR Difficulty = 'high school' OR Difficulty = 'open' OR Difficulty = 'college') ";
+                difficultyQuery = "AND Difficulty = 'college' OR Difficulty = 'ms' OR Difficulty = 'hs' OR Difficulty = 'high school' OR Difficulty = 'open' OR Difficulty = 'college' ";
             } else {
                 difficultyQuery = "AND Difficulty = '" + difficulty + "'";
             }
             if (searchBoxValue != null || searchBoxValue != ""){
-                searchQuery = "AND (Intro LIKE '%" + searchBoxValue + "%' OR Question1 LIKE '%" + searchBoxValue + "%'  OR Question2 LIKE '%" + searchBoxValue + "%'  OR Question3 LIKE '%" + searchBoxValue + "%'  OR Answer1 LIKE '%" + searchBoxValue + "%'  OR Answer2 LIKE '%" + searchBoxValue + "%'  OR Answer3 LIKE '%" + searchBoxValue + "%')";
+                searchQuery = "AND Intro LIKE '%" + searchBoxValue + "%' OR Question1 LIKE '%" + searchBoxValue + "%'  OR Question2 LIKE '%" + searchBoxValue + "%'  OR Question3 LIKE '%" + searchBoxValue + "%'  OR Answer1 LIKE '%" + searchBoxValue + "%'  OR Answer2 LIKE '%" + searchBoxValue + "%'  OR Answer3 LIKE '%" + searchBoxValue + "%'";
             } else{
                 searchQuery = "";
             }
 
             
                 // Get connection to DB
-                Connection myConnection = DriverManager.getConnection("jdbc:mysql://quinterestdb.db.11269592.hostedresource.com/quinterestdb", "quinterestdb", "Quinterest!@#4");
+                Connection myConnection = DriverManager.getConnection("jdbc:sqlite:src/db/db.sqlite");
 
                 // Create statement
-                Statement myStmt = myConnection.createStatement(ResultSet.TYPE_SCROLL_INSENSITIVE, ResultSet.CONCUR_READ_ONLY);
+                
                 
                 // Get number of possible questions
                 
                 if (resultsExist==true){
                     // Execute SQL Query
-                    ResultSet myRs = myStmt.executeQuery("select * from bonusesdb WHERE ID LIKE '%%%%' " + categoryQuery + " " + tournamentQuery + " " + searchQuery + " " + difficultyQuery + " ORDER BY RAND() LIMIT 0,1");
-                    myRs.first();
+                    ResultSet myRs = myConnection.createStatement().executeQuery("select * from bonusesdb WHERE ID LIKE '%%%%' " + categoryQuery + " " + tournamentQuery + " " + searchQuery + " " + difficultyQuery + " ORDER BY RANDOM() LIMIT 1");
+                    
 
                     results[0]=myRs.getString("tournament");
                     results[1]=myRs.getString("year");

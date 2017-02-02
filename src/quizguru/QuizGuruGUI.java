@@ -40,7 +40,7 @@ public class QuizGuruGUI extends javax.swing.JFrame {
         tts.setVoice("cmu-rms-hsmm");
         
     }
-    public static final String VERSION = "1.3";
+    public static final String VERSION = "1.3.1";
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -104,6 +104,8 @@ public class QuizGuruGUI extends javax.swing.JFrame {
         jLabel17 = new javax.swing.JLabel();
         jLabel18 = new javax.swing.JLabel();
         jLabel19 = new javax.swing.JLabel();
+        jLabel22 = new javax.swing.JLabel();
+        jLabel23 = new javax.swing.JLabel();
 
         tournamentLabel2.setFont(new java.awt.Font("Lucida Grande", 3, 18)); // NOI18N
         tournamentLabel2.setText("by Julian Rachele");
@@ -165,7 +167,6 @@ public class QuizGuruGUI extends javax.swing.JFrame {
         jSeparator1.setOrientation(javax.swing.SwingConstants.VERTICAL);
 
         pausePlayButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/res/pause.png"))); // NOI18N
-        pausePlayButton.setText(" ");
         pausePlayButton.setAlignmentX(0.5F);
         pausePlayButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -206,7 +207,6 @@ public class QuizGuruGUI extends javax.swing.JFrame {
         julianLabel.setText("by Julian Rachele");
 
         stopButton.setIcon(new javax.swing.ImageIcon(getClass().getResource("/res/stop.png"))); // NOI18N
-        stopButton.setText(" ");
         stopButton.setAlignmentX(0.5F);
         stopButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
@@ -255,7 +255,7 @@ public class QuizGuruGUI extends javax.swing.JFrame {
                             .addComponent(tournamentLabel1))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addGroup(queryPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(tournamentDropDown, 0, 164, Short.MAX_VALUE)
+                            .addComponent(tournamentDropDown, 0, 194, Short.MAX_VALUE)
                             .addComponent(difficultyDropDown, 0, javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
                         .addGap(6, 6, 6))))
             .addGroup(queryPanelLayout.createSequentialGroup()
@@ -421,6 +421,10 @@ public class QuizGuruGUI extends javax.swing.JFrame {
 
         jLabel19.setText("Quiz Bowl Questions Database");
 
+        jLabel22.setText("and to Albert Zhang for helping to set up");
+
+        jLabel23.setText("SQLite so you can study offline");
+
         javax.swing.GroupLayout aboutPanelLayout = new javax.swing.GroupLayout(aboutPanel);
         aboutPanel.setLayout(aboutPanelLayout);
         aboutPanelLayout.setHorizontalGroup(
@@ -465,22 +469,34 @@ public class QuizGuruGUI extends javax.swing.JFrame {
                                             .addGroup(aboutPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                                                 .addComponent(jLabel13, javax.swing.GroupLayout.Alignment.TRAILING)
                                                 .addComponent(jLabel14, javax.swing.GroupLayout.Alignment.TRAILING)))))
-                                .addComponent(jLabel5))))
+                                .addComponent(jLabel5)))))
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, aboutPanelLayout.createSequentialGroup()
+                .addGap(0, 72, Short.MAX_VALUE)
+                .addGroup(aboutPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                    .addComponent(jLabel17)
                     .addGroup(aboutPanelLayout.createSequentialGroup()
-                        .addGap(53, 53, 53)
                         .addComponent(jLabel15)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                         .addGroup(aboutPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                            .addComponent(jLabel16)
                             .addGroup(aboutPanelLayout.createSequentialGroup()
-                                .addGap(16, 16, 16)
-                                .addGroup(aboutPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
-                                    .addComponent(jLabel18, javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addComponent(jLabel17, javax.swing.GroupLayout.Alignment.LEADING)
-                                    .addGroup(javax.swing.GroupLayout.Alignment.LEADING, aboutPanelLayout.createSequentialGroup()
-                                        .addGap(15, 15, 15)
-                                        .addComponent(jLabel19)))))))
-                .addContainerGap(89, Short.MAX_VALUE))
+                                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
+                                .addComponent(jLabel16))
+                            .addGroup(aboutPanelLayout.createSequentialGroup()
+                                .addGap(36, 36, 36)
+                                .addGroup(aboutPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addGroup(aboutPanelLayout.createSequentialGroup()
+                                        .addGap(8, 8, 8)
+                                        .addGroup(aboutPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
+                                            .addComponent(jLabel18, javax.swing.GroupLayout.Alignment.LEADING)
+                                            .addGroup(javax.swing.GroupLayout.Alignment.LEADING, aboutPanelLayout.createSequentialGroup()
+                                                .addGap(15, 15, 15)
+                                                .addComponent(jLabel19))))
+                                    .addGroup(aboutPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                        .addComponent(jLabel22)
+                                        .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, aboutPanelLayout.createSequentialGroup()
+                                            .addComponent(jLabel23)
+                                            .addGap(23, 23, 23))))))))
+                .addGap(70, 70, 70))
         );
         aboutPanelLayout.setVerticalGroup(
             aboutPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
@@ -514,19 +530,22 @@ public class QuizGuruGUI extends javax.swing.JFrame {
                     .addComponent(jLabel8)
                     .addComponent(jLabel11)
                     .addComponent(jLabel14))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 46, Short.MAX_VALUE)
+                .addGap(50, 50, 50)
                 .addGroup(aboutPanelLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jLabel15)
                     .addGroup(aboutPanelLayout.createSequentialGroup()
-                        .addGap(25, 25, 25)
                         .addComponent(jLabel16)
-                        .addGap(40, 40, 40)
+                        .addGap(18, 18, 18)
                         .addComponent(jLabel17)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                         .addComponent(jLabel18)
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                        .addComponent(jLabel19))
-                    .addComponent(jLabel15))
-                .addGap(38, 38, 38))
+                        .addComponent(jLabel19)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel22)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addComponent(jLabel23)))
+                .addContainerGap(68, Short.MAX_VALUE))
         );
 
         queryTab.addTab("About", aboutPanel);
@@ -890,6 +909,8 @@ public class QuizGuruGUI extends javax.swing.JFrame {
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel20;
     private javax.swing.JLabel jLabel21;
+    private javax.swing.JLabel jLabel22;
+    private javax.swing.JLabel jLabel23;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;
     private javax.swing.JLabel jLabel5;
