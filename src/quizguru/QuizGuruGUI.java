@@ -28,15 +28,18 @@ public class QuizGuruGUI extends javax.swing.JFrame {
      * Creates new form QuizGuruGUI
      */
     TextToSpeech tts = new TextToSpeech();
-    boolean questionRead,question1Read,question2Read,question3Read,resultsExist,coppedBonuses,paused = false;
+    boolean questionRead,question1Read,question2Read,question3Read,coppedBonuses,paused = false;
 
     int bonusCursor = 0;
     QuizGuru guruMain = new QuizGuru();
     String fullQuestion = new String();
-    String question[] = null;
+    String tossup[] = null;
+    String bonus[] = null;
     boolean seen = false;
-    private ImageIcon playIcon = new ImageIcon(getClass().getResource("/res/play.png"));
-    private Icon pauseIcon = new ImageIcon(getClass().getResource("/res/pause.png"));
+    private final ImageIcon playIcon = new ImageIcon(getClass().getResource("/res/play.png"));
+    private final Icon pauseIcon = new ImageIcon(getClass().getResource("/res/pause.png"));
+    
+    
     public QuizGuruGUI() {
         initComponents();
         tts.setVoice("cmu-rms-hsmm");
@@ -594,12 +597,13 @@ public class QuizGuruGUI extends javax.swing.JFrame {
 
     private void voiceDropDownActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_voiceDropDownActionPerformed
         // TODO add your handling code here:
-        if (voiceDropDown.getSelectedItem().toString() == "US Woman 1"){
+        
+        if (voiceDropDown.getSelectedItem() == voiceDropDown.getItemAt(0)){
             tts.setVoice("cmu-slt-hsmm");
 
-        } else if (voiceDropDown.getSelectedItem().toString() == "US Man 1"){
+        } else if (voiceDropDown.getSelectedItem() == voiceDropDown.getItemAt(1)){
             tts.setVoice("cmu-rms-hsmm");
-        } else if (voiceDropDown.getSelectedItem().toString() == "UK Woman 1"){
+        } else if (voiceDropDown.getSelectedItem() == voiceDropDown.getItemAt(2)){
             tts.setVoice("dfki-poppy-hsmm");
         } else {
             tts.setVoice("dfki-prudence-hsmm");
@@ -617,20 +621,13 @@ public class QuizGuruGUI extends javax.swing.JFrame {
     private void generateButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_generateButtonActionPerformed
         // TODO add your handling code here:
         StopSpeaking();
-        if (reviewCheckBox.isSelected()){
-            question = guruMain.GenerateSeenTossupResults(categoryDropDown.getSelectedItem().toString(), tournamentDropDown.getSelectedItem().toString(), questionRead, customSearchTextBox.getText(), difficultyDropDown.getSelectedItem().toString());
-            if (question == null){
-                    JOptionPane.showMessageDialog(new JFrame(), "None of the questions you have seen fit these criteria", "Dialog",
-                JOptionPane.INFORMATION_MESSAGE);
+        try {
+                if (!questionRead){
+                    tossup = guruMain.GenerateResults(categoryDropDown.getSelectedItem().toString(), tournamentDropDown.getSelectedItem().toString(), customSearchTextBox.getText(), difficultyDropDown.getSelectedItem().toString(), reviewCheckBox.isSelected());
                 }
-        }else{
-            question = guruMain.GenerateResults(categoryDropDown.getSelectedItem().toString(), tournamentDropDown.getSelectedItem().toString(), questionRead, customSearchTextBox.getText(), difficultyDropDown.getSelectedItem().toString());
-        }
-        if (question == null){
-            resultsExist = false;
-        } else {
-            resultsExist = true;
-        }
+            } catch (SQLException ex) {
+                Logger.getLogger(QuizGuruGUI.class.getName()).log(Level.SEVERE, null, ex);
+            }
         paused = false;
         pausePlayButton.setIcon(pauseIcon);
         generateButtonBonus.setText("Get Bonus");
@@ -639,12 +636,12 @@ public class QuizGuruGUI extends javax.swing.JFrame {
         question2Read = false;
         question3Read=false;
         bonusCursor = 0;
-        if (resultsExist == true){
+        if (tossup != null){
             if (questionRead == false){
 
                 questionRead = true;
-                fullQuestion = question[1] + " " + question[0] + " question #" + question[5] + ": \n" + question[3];
-                Speak("TOSSUP: " + question[3]);
+                fullQuestion = tossup[1] + " " + tossup[0] + " question #" + tossup[5] + ": \n" + tossup[3];
+                Speak("TOSSUP: " + tossup[3]);
                 if(enableTextBox.isSelected()){
                     displayTextBox.setText(fullQuestion);
                 } else{
@@ -656,10 +653,10 @@ public class QuizGuruGUI extends javax.swing.JFrame {
             } else {
 
                 questionRead = false;
-                displayTextBox.setText(fullQuestion + "\nANSWER: " + question[4]);
-                Speak("ANSWER: " + question[4]);
+                displayTextBox.setText(fullQuestion + "\nANSWER: " + tossup[4]);
+                Speak("ANSWER: " + tossup[4]);
                 generateButton.setText("Get Tossup");
-                answerTextBox.append(question[4] + " (from " + question[1] + " " + question[0] + " question #" + question[5] + ") \n");
+                answerTextBox.append(tossup[4] + " (from " + tossup[1] + " " + tossup[0] + " question #" + tossup[5] + ") \n");
 
             }
         } else{
@@ -671,124 +668,109 @@ public class QuizGuruGUI extends javax.swing.JFrame {
     private void generateButtonBonusActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_generateButtonBonusActionPerformed
         // TODO add your handling code here:
         StopSpeaking();
-        
-        String speechString = null;
+        String speechString;
         
         
         
         if(coppedBonuses==false){
-            if (reviewCheckBox.isSelected()){
-                
-                question = guruMain.GenerateSeenBonusResults(categoryDropDown.getSelectedItem().toString(), tournamentDropDown.getSelectedItem().toString(), customSearchTextBox.getText(), difficultyDropDown.getSelectedItem().toString());
-                if (question == null){
-                    JOptionPane.showMessageDialog(new JFrame(), "None of the questions you have seen fit these criteria", "Dialog",
-                JOptionPane.INFORMATION_MESSAGE);
+            try {
+                    bonus = guruMain.GenerateBonusResults(categoryDropDown.getSelectedItem().toString(), tournamentDropDown.getSelectedItem().toString(), customSearchTextBox.getText(), difficultyDropDown.getSelectedItem().toString(), reviewCheckBox.isSelected());
+                } catch (SQLException ex) {
+                    Logger.getLogger(QuizGuruGUI.class.getName()).log(Level.SEVERE, null, ex);
                 }
-            }else{
-                question = guruMain.GenerateBonusResults(categoryDropDown.getSelectedItem().toString(), tournamentDropDown.getSelectedItem().toString(), customSearchTextBox.getText(), difficultyDropDown.getSelectedItem().toString());
-            }
             
-            if (question == null){
-            resultsExist = false;
-            } else {
-                resultsExist = true;
-                coppedBonuses = true;
-                if(question[3] == null || question[3].isEmpty()){
-                    question[3] = "The Quinterest database neglected to put in an intro for this bonus, for 10 points each:";
-                }
-            }
-        }
-        if(bonusCursor == 0){
-            paused = false;
-            pausePlayButton.setIcon(pauseIcon);
-        if (resultsExist == true){
-            if (question1Read == false){
-                question1Read = true;
-                fullQuestion = question[1] + " " + question[0] + " question #" + question[10] + ": \n" + question[3] + "\n[10] " + question[4];
-                speechString = question[3] + " " + question[4];
-                Speak("BONUS: " + speechString);
-                if(enableTextBox.isSelected()){
-                    displayTextBox.setText(fullQuestion);
-                } else{
-                    displayTextBox.setText("Press Get Answer to view Question and Answer.");
-                }
-
-                generateButtonBonus.setText("Get Answer");
-
-            } else {
-                
-                question1Read = false;
-                displayTextBox.setText(fullQuestion + "\nANSWER: " + question[5]);
-                Speak("ANSWER: " + question[5]);
-                generateButtonBonus.setText("Next Bonus");
-                bonusCursor = 1;
-
-            }
-        } else{
-            JOptionPane.showMessageDialog(new JFrame(), "Unable to produce questions under the criteria selected.", "Dialog",
-                JOptionPane.ERROR_MESSAGE);
-        }
-        }
-        else if (bonusCursor == 1){
-            paused = false;
-            pausePlayButton.setIcon(pauseIcon);
-            if (question2Read == false){
-                question2Read = true;
-                fullQuestion = question[1] + " " + question[0] + " question #" + question[10] + ": \n" + question[3] + "\n[10] " + question[4] + "\nANSWER: " + question[5] + "\n[10] " + question[6];
-                speechString = question[6];
-                Speak(speechString.replaceAll("'","").replaceAll("/", " "));
-                if(enableTextBox.isSelected()){
-                    displayTextBox.setText(fullQuestion);
-                } else{
-                    displayTextBox.setText("Press Get Answer to view Question and Answer.");
-                }
-
-                generateButtonBonus.setText("Get Answer");
-
-            } else {
-                
-                question2Read = false;
-                displayTextBox.setText(fullQuestion + "\nANSWER: " + question[7]);
-                Speak("ANSWER: " + question[7]);
-                generateButtonBonus.setText("Next Bonus");
-                bonusCursor = 2;
-
-            }
-        
-        }
-        else if (bonusCursor == 2){
-            paused = false;
-            pausePlayButton.setIcon(pauseIcon);
-            if (question3Read == false){
-                question3Read = true;
-                fullQuestion = question[1] + " " + question[0] + " question #" + question[10] + ": \n" + question[3] + "\n[10] " + question[4] + "\nANSWER: " + question[5] + "\n[10] " + question[6] + "\nANSWER: " + question[7] + "\n[10] " + question[8];
-                speechString = question[8];
-                Speak(speechString);
-                if(enableTextBox.isSelected()){
-                    displayTextBox.setText(fullQuestion);
-                } else{
-                    displayTextBox.setText("Press Get Answer to view Question and Answer.");
-                }
-
-                generateButtonBonus.setText("Get Answer");
-
-            } else {
-                
-                question3Read = false;
-                displayTextBox.setText(fullQuestion + "\nANSWER: " + question[9]);
-                Speak("ANSWER: " + question[9]);
-                generateButtonBonus.setText("Get Bonuses");
-                
-                answerTextBox.append(question[1] + " " + question[0] + " question #" + question[10] + " \n");
-                coppedBonuses = false;
-                question1Read = false;
-                question2Read = false;
-                question3Read=false;
-                bonusCursor = 0;
-
-            }
             
-        
+        }
+        switch (bonusCursor) {
+            case 0:
+                paused = false;
+                pausePlayButton.setIcon(pauseIcon);
+                if (bonus != null){
+                    coppedBonuses= true;
+                    if (question1Read == false){
+                        question1Read = true;
+                        fullQuestion = bonus[1] + " " + bonus[0] + " question #" + bonus[10] + ": \n" + bonus[3] + "\n[10] " + bonus[4];
+                        speechString = bonus[3] + " " + bonus[4];
+                        Speak("BONUS: " + speechString);
+                        if(enableTextBox.isSelected()){
+                            displayTextBox.setText(fullQuestion);
+                        } else{
+                            displayTextBox.setText("Press Get Answer to view Question and Answer.");
+                        }
+                        
+                        generateButtonBonus.setText("Get Answer");
+                        
+                    } else {
+                        
+                        question1Read = false;
+                        displayTextBox.setText(fullQuestion + "\nANSWER: " + bonus[5]);
+                        Speak("ANSWER: " + bonus[5]);
+                        generateButtonBonus.setText("Next Bonus");
+                        bonusCursor = 1;
+                        
+                    }
+                } else{
+                    JOptionPane.showMessageDialog(new JFrame(), "Unable to produce questions under the criteria selected.", "Dialog",
+                            JOptionPane.ERROR_MESSAGE);
+                }       break;
+            case 1:
+                paused = false;
+                pausePlayButton.setIcon(pauseIcon);
+                if (question2Read == false){
+                    question2Read = true;
+                    fullQuestion = bonus[1] + " " + bonus[0] + " question #" + bonus[10] + ": \n" + bonus[3] + "\n[10] " + bonus[4] + "\nANSWER: " + bonus[5] + "\n[10] " + bonus[6];
+                    speechString = bonus[6];
+                    Speak(speechString.replaceAll("'","").replaceAll("/", " "));
+                    if(enableTextBox.isSelected()){
+                        displayTextBox.setText(fullQuestion);
+                    } else{
+                        displayTextBox.setText("Press Get Answer to view Question and Answer.");
+                    }
+                    
+                    generateButtonBonus.setText("Get Answer");
+                    
+                } else {
+                    
+                    question2Read = false;
+                    displayTextBox.setText(fullQuestion + "\nANSWER: " + bonus[7]);
+                    Speak("ANSWER: " + bonus[7]);
+                    generateButtonBonus.setText("Next Bonus");
+                    bonusCursor = 2;
+                    
+                }   break;
+            case 2:
+                paused = false;
+                pausePlayButton.setIcon(pauseIcon);
+                if (question3Read == false){
+                    question3Read = true;
+                    fullQuestion = bonus[1] + " " + bonus[0] + " question #" + bonus[10] + ": \n" + bonus[3] + "\n[10] " + bonus[4] + "\nANSWER: " + bonus[5] + "\n[10] " + bonus[6] + "\nANSWER: " + bonus[7] + "\n[10] " + bonus[8];
+                    speechString = bonus[8];
+                    Speak(speechString);
+                    if(enableTextBox.isSelected()){
+                        displayTextBox.setText(fullQuestion);
+                    } else{
+                        displayTextBox.setText("Press Get Answer to view Question and Answer.");
+                    }
+                    
+                    generateButtonBonus.setText("Get Answer");
+                    
+                } else {
+                    
+                    question3Read = false;
+                    displayTextBox.setText(fullQuestion + "\nANSWER: " + bonus[9]);
+                    Speak("ANSWER: " + bonus[9]);
+                    generateButtonBonus.setText("Get Bonuses");
+                    
+                    answerTextBox.append(bonus[1] + " " + bonus[0] + " question #" + bonus[10] + " \n");
+                    coppedBonuses = false;
+                    question1Read = false;
+                    question2Read = false;
+                    question3Read=false;
+                    bonusCursor = 0;
+                    
+                }   break;
+            default:
+                break;
         }
         
            
