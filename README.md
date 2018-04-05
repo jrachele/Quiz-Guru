@@ -1,4 +1,4 @@
-# Quiz-Guru
+# ![Quiz Guru](src/res/quizguru.png)
 A Java project for voice dictating Quiz Bowl questions
 
 I started this project in order to allow for everyone to get an opportunity to play during those road trips to tournaments and during practices.
